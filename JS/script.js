@@ -19,13 +19,18 @@ let audio = new Audio(songs[currSongIndex]);
 
 
 function updateSongMetaData() {
-    let currentSong = {
-        name: 'White Noise',
-        artist: 'ERRA'
-    };
-    songName.innerHTML = currentSong.name;
-    artistName.innerHTML = currentSong.artist;
+    const songMetaData = [
+        { name: 'White Noise', artist: 'ERRA' },
+        { name: 'Engine 45', artist: 'The Ghost Inside' },
+        { name: 'V (Cyberpunk 2077 Soundtrack)', artist: 'Various Artists' }
+        // Add more songs as needed
+    ];
+
+    // Update song name and artist based on current song index
+    songName.textContent = songMetaData[currSongIndex].name;
+    artistName.textContent = songMetaData[currSongIndex].artist;
 }
+
 
 updateSongMetaData();
 
@@ -37,19 +42,30 @@ skipBack.addEventListener('click', function() {
 
 playButton.addEventListener('click', function() {
     if(isPlaying) {
-        audio.pause()
-        playButton.innerHTML = '<i class="fas fa-play"></i>';
-    }
-    else {
-        audio.play()
-        playButton.innerHTML = '<i class="fas fa-pause"></i>';
+        audio.pause();
+        playButton.innerHTML = '<i class="fa-solid fa-play"></i>'; // Replace with your play icon class
+    } else {
+        audio.play();
+        playButton.innerHTML = '<i class="fa-solid fa-pause"></i>'; // Replace with your pause icon class
     }
     isPlaying = !isPlaying;
 });
 
+
 skipNext.addEventListener('click', function() {
     // Logic to skip to the next audio file
     // You would implement the logic to change the audio here
+    currSongIndex++;
+    if(currSongIndex >= songs.length) {
+        currSongIndex = 0;
+    }
+
+    // Changes audio to next song in list
+    audio.src = songs[currSongIndex]; 
+    audio.play();
+    updateSongMetaData();
+    playButton.innerHTML = '<i class="fas fa-pause"></i>';
+    isPlaying = true;
 });
 
 settings.addEventListener('click', function() {
@@ -60,6 +76,15 @@ settings.addEventListener('click', function() {
 goBack.addEventListener('click', function() {
     // Logic to go back to previous page or action
     // You would implement the go back behavior here
+    currSongIndex--;
+    if (currSongIndex < 0) {
+        currSongIndex = songs.length - 1; // Wrap around to the last song if at the beginning
+    }
+    audio.src = songs[currSongIndex];
+    audio.play();
+    updateSongMetaData();
+    playButton.innerHTML = '<i class="fa-solid fa-pause"></i>';
+    isPlaying = true;
 });
 
 audio.addEventListener('ended', function() {
